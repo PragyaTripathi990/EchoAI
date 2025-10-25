@@ -94,24 +94,40 @@ export const askToAssistant = async (req, res) => {
         console.log("🤖 Gemini raw response:", responseText);
         
         if (!responseText) {
-            console.error("❌ Gemini returned null");
+            console.error("❌ Gemini returned null - Check your API key!");
             return res.status(200).json({
                 type: "general",
                 userInput: command,
-                response: "Sorry, I'm having trouble connecting to my AI service right now."
+                response: "I'm having trouble connecting to my AI brain. Please check if the Gemini API key is configured correctly in the server environment file."
             });
         }
         
-        const parsedResponse = JSON.parse(responseText.replace(/```json|```/g, '').trim());
-        console.log("✅ Parsed response:", parsedResponse);
-        return res.status(200).json(parsedResponse);
+        // Try to parse the JSON response
+        try {
+            // Remove markdown code blocks if present
+            let cleanedResponse = responseText.replace(/```json\n?|\n?```/g, '').trim();
+            const parsedResponse = JSON.parse(cleanedResponse);
+            console.log("✅ Parsed response:", parsedResponse);
+            return res.status(200).json(parsedResponse);
+        } catch (parseError) {
+            console.error("❌ JSON Parse Error:", parseError);
+            console.error("Raw response that failed:", responseText);
+            
+            // Fallback response
+            return res.status(200).json({
+                type: "general",
+                userInput: command,
+                response: "I understood your question, but I'm having trouble formatting my answer. Please try again or check the server logs."
+            });
+        }
     } catch(errors) {
         console.error("❌ Ask to assistant error:", errors);
         console.error("Error details:", errors.message);
+        console.error("Stack trace:", errors.stack);
         return res.status(200).json({
             type: "general",
-            userInput: req.body.command,
-            response: "Sorry, I encountered an error processing your request."
+            userInput: req.body.command || "unknown",
+            response: "Sorry, I encountered an error. Please check the server console for details."
         });
     }
 }
