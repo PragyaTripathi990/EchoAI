@@ -10,7 +10,13 @@ import geminiResponse from './gemini.js';
 
 const app = express();
 app.use(cors({
-    origin: ['http://localhost:5174', 'http://localhost:5175'],
+    origin: [
+        'http://localhost:5174', 
+        'http://localhost:5175',
+        'https://echo-ai-pi-two.vercel.app',
+        'https://echo-ai-git-master-pragyatripathi990s-projects.vercel.app',
+        'https://echo-d0gmc7mjm-pragyatripathi990s-projects.vercel.app'
+    ],
     credentials: true
 }));
 app.use(express.json());
