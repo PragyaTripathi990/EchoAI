@@ -58,9 +58,10 @@ function Customize2() {
       {/* Back Button */}
       <button 
         onClick={()=>navigate("/customize")}
-        className='absolute top-8 left-8 glass rounded-full p-3 hover-lift group z-10'
+        className='absolute top-8 left-8 glass rounded-2xl px-4 py-2.5 hover-lift group z-10 flex items-center gap-2'
       >
-        <MdKeyboardBackspace className='text-white w-7 h-7 group-hover:scale-110 transition-transform'/>
+        <MdKeyboardBackspace className='text-white w-5 h-5 group-hover:-translate-x-1 transition-transform'/>
+        <span className='text-white font-medium text-sm'>Back</span>
       </button>
 
       {/* Main Content */}
@@ -68,19 +69,24 @@ function Customize2() {
         {/* Header */}
         <div className='text-center'>
           <div className='flex justify-center mb-6'>
-            <div className='w-24 h-24 rounded-full bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center animate-pulse-glow'>
-              <span className='text-5xl'>✨</span>
+            <div className='relative'>
+              <div className='w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500 via-violet-500 to-fuchsia-500 flex items-center justify-center shadow-xl'>
+                <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                </svg>
+              </div>
+              <div className='absolute -bottom-2 -right-2 w-7 h-7 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full border-2 border-slate-900'></div>
             </div>
           </div>
-          <h1 className='text-white text-4xl md:text-5xl font-bold mb-3 tracking-tight'>
+          <h1 className='text-white text-4xl md:text-5xl font-bold mb-4 tracking-tight'>
             Name Your Assistant
           </h1>
-          <p className='text-gray-300 text-lg'>Give your AI companion a unique identity</p>
+          <p className='text-slate-400 text-lg max-w-xl mx-auto'>Give your AI companion a unique identity. Choose something memorable and easy to say.</p>
         </div>
 
         {/* Name Input */}
         <div className='space-y-3'>
-          <label className='text-gray-300 text-base font-medium ml-2 block'>Assistant Name</label>
+          <label className='text-slate-300 text-base font-medium ml-2 block'>Assistant Name</label>
           <input 
             type="text" 
             placeholder='e.g., Jarvis, Friday, Nova...' 
@@ -90,20 +96,27 @@ function Customize2() {
             value={assistantName}
             maxLength={20}
           />
-          <p className='text-gray-400 text-sm text-center'>
-            You'll say this name to activate your assistant
-          </p>
+          <div className='flex items-center justify-center gap-2 text-slate-400 text-sm'>
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+            </svg>
+            <span>You'll say this name to activate your assistant</span>
+          </div>
         </div>
 
         {/* Suggestions */}
-        <div className='space-y-3'>
-          <p className='text-gray-300 text-sm font-medium text-center'>Popular Names</p>
-          <div className='flex flex-wrap justify-center gap-2'>
+        <div className='space-y-4'>
+          <div className='flex items-center gap-2 justify-center'>
+            <div className='h-px flex-1 bg-gradient-to-r from-transparent via-white/20 to-transparent'></div>
+            <p className='text-slate-400 text-sm font-medium'>Popular Names</p>
+            <div className='h-px flex-1 bg-gradient-to-r from-transparent via-white/20 to-transparent'></div>
+          </div>
+          <div className='flex flex-wrap justify-center gap-3'>
             {suggestions.map((name) => (
               <button
                 key={name}
                 onClick={() => setAssistantName(name)}
-                className='px-4 py-2 glass-dark rounded-full text-white text-sm font-medium hover-lift hover:bg-white/10 transition-all'
+                className='px-5 py-2.5 glass-dark rounded-xl text-white text-sm font-medium hover-lift hover:bg-white/10 transition-all border border-white/10 hover:border-white/20'
               >
                 {name}
               </button>
@@ -113,15 +126,23 @@ function Customize2() {
 
         {/* Preview Card */}
         {assistantName && (
-          <div className='glass-dark rounded-2xl p-6 animate-slide-up border border-white/10'>
-            <p className='text-gray-400 text-sm mb-2 text-center'>Preview</p>
-            <div className='flex items-center justify-center gap-4'>
-              <div className='w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center'>
-                <span className='text-3xl'>🤖</span>
+          <div className='glass-dark rounded-2xl p-6 animate-slide-up border border-white/10 shadow-xl'>
+            <div className='flex items-center gap-2 mb-4'>
+              <svg className="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              <p className='text-slate-400 text-sm font-medium'>Preview</p>
+            </div>
+            <div className='flex items-center justify-center gap-5'>
+              <div className='w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center shadow-lg'>
+                <span className='text-white text-2xl font-bold'>
+                  {assistantName.charAt(0).toUpperCase()}
+                </span>
               </div>
               <div>
-                <p className='text-white text-2xl font-bold'>{assistantName}</p>
-                <p className='text-gray-400 text-sm'>Your AI Assistant</p>
+                <p className='text-white text-2xl font-bold tracking-tight'>{assistantName}</p>
+                <p className='text-slate-400 text-sm'>Your AI Assistant</p>
               </div>
             </div>
           </div>
@@ -130,10 +151,10 @@ function Customize2() {
         {/* Create Button */}
         <button 
           className={`
-            w-full h-16 rounded-2xl text-xl font-bold transition-all duration-300 
+            w-full h-16 rounded-2xl text-xl font-bold transition-all duration-300 flex items-center justify-center gap-3
             ${assistantName.trim() 
               ? 'bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white hover-lift shadow-xl' 
-              : 'bg-gray-600 text-gray-400 cursor-not-allowed'}
+              : 'bg-slate-700 text-slate-400 cursor-not-allowed'}
           `}
           disabled={loading || !assistantName.trim()} 
           onClick={(e)=>{
@@ -142,22 +163,30 @@ function Customize2() {
           }}
         >
           {loading ? (
-            <span className='flex items-center justify-center gap-3'>
+            <>
               <svg className="animate-spin h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              Creating Your Assistant...
-            </span>
+              <span>Creating Your Assistant...</span>
+            </>
           ) : (
-            <span>🚀 Create Your Assistant</span>
+            <>
+              <span>Create Your Assistant</span>
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </>
           )}
         </button>
 
         {/* Info Box */}
-        <div className='glass-dark rounded-xl p-4 border-l-4 border-blue-500'>
-          <p className='text-gray-300 text-sm'>
-            <span className='font-semibold text-white'>💡 Tip:</span> Choose a name that's easy to pronounce. 
+        <div className='glass-dark rounded-xl p-4 border-l-4 border-blue-500 flex items-start gap-3'>
+          <svg className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+          </svg>
+          <p className='text-slate-300 text-sm'>
+            <span className='font-semibold text-white'>Pro Tip:</span> Choose a name that's easy to pronounce. 
             You'll say "<span className='text-blue-400 font-semibold'>{assistantName || 'YourName'}</span>, what time is it?" 
             to activate your assistant.
           </p>

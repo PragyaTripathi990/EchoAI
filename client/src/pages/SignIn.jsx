@@ -41,17 +41,22 @@ function SignIn() {
       
       {/* Sign In Form */}
       <form className='w-full max-w-md glass rounded-3xl p-8 md:p-10 flex flex-col gap-6 animate-scale-in relative z-10' onSubmit={handleSignIn}>
-        {/* Logo/Icon */}
+        {/* Logo */}
         <div className='flex justify-center mb-4'>
-          <div className='w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center animate-pulse-glow'>
-            <span className='text-4xl'>🤖</span>
+          <div className='relative'>
+            <div className='w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-lg'>
+              <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <div className='absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-slate-900'></div>
           </div>
         </div>
         
         {/* Title */}
-        <div className='text-center space-y-2'>
+        <div className='text-center space-y-2 mb-2'>
           <h1 className='text-white text-4xl font-bold tracking-tight'>Welcome Back</h1>
-          <p className='text-gray-300 text-lg'>Sign in to <span className='gradient-text-blue font-semibold'>QuickAI</span></p>
+          <p className='text-slate-400 text-base'>Sign in to <span className='text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 font-semibold'>QuickAI</span></p>
         </div>
 
         {/* Email Input */}
@@ -86,8 +91,11 @@ function SignIn() {
 
         {/* Error Message */}
         {err.length>0 && (
-          <div className='glass-dark rounded-xl p-3 border-l-4 border-red-500'>
-            <p className='text-red-400 text-sm font-medium'>⚠️ {err}</p>
+          <div className='glass-dark rounded-xl p-3.5 border-l-4 border-red-500 flex items-start gap-3'>
+            <svg className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+            </svg>
+            <p className='text-red-400 text-sm font-medium'>{err}</p>
           </div>
         )}
 

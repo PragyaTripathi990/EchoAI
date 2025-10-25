@@ -5,7 +5,7 @@ const geminiResponse = async (command, assistantName, userName) => {
         const apiUrl = process.env.GEMINI_API_URL;
         
         if (!apiUrl || apiUrl.includes('YOUR_API_KEY') || apiUrl.includes('YOUR_GEMINI_API_KEY')) {
-            console.error("❌ GEMINI_API_URL not configured properly!");
+            console.error("GEMINI_API_URL not configured properly!");
             console.error("Current value:", apiUrl);
             return null;
         }
@@ -98,10 +98,10 @@ Respond ONLY with the JSON object now:`;
         });
 
         const text = result.data.candidates[0].content.parts[0].text;
-        console.log("✅ Gemini returned text successfully");
+        console.log("Gemini returned text successfully");
         return text;
     } catch (error) {
-        console.error('❌ Gemini API error:', error.message);
+        console.error('Gemini API error:', error.message);
         if (error.response) {
             console.error('Response status:', error.response.status);
             console.error('Response data:', error.response.data);

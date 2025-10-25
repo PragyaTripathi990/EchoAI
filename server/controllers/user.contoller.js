@@ -81,20 +81,20 @@ export const askToAssistant = async (req, res) => {
     try {
         const userId = req.userId;
         const { command } = req.body;
-        console.log("🎤 Command received:", command);
+        console.log("Command received:", command);
         
         const user = await User.findById(userId);
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
         
-        console.log("👤 User:", user.name, "Assistant:", user.assistantName);
+        console.log("User:", user.name, "Assistant:", user.assistantName);
         const responseText = await geminiResponse(command, user.assistantName, user.name);
         
-        console.log("🤖 Gemini raw response:", responseText);
+        console.log("Gemini raw response:", responseText);
         
         if (!responseText) {
-            console.error("❌ Gemini returned null - Check your API key!");
+            console.error("Gemini returned null - Check your API key!");
             return res.status(200).json({
                 type: "general",
                 userInput: command,
@@ -107,10 +107,10 @@ export const askToAssistant = async (req, res) => {
             // Remove markdown code blocks if present
             let cleanedResponse = responseText.replace(/```json\n?|\n?```/g, '').trim();
             const parsedResponse = JSON.parse(cleanedResponse);
-            console.log("✅ Parsed response:", parsedResponse);
+            console.log("Parsed response:", parsedResponse);
             return res.status(200).json(parsedResponse);
         } catch (parseError) {
-            console.error("❌ JSON Parse Error:", parseError);
+            console.error("JSON Parse Error:", parseError);
             console.error("Raw response that failed:", responseText);
             
             // Fallback response
@@ -121,7 +121,7 @@ export const askToAssistant = async (req, res) => {
             });
         }
     } catch(errors) {
-        console.error("❌ Ask to assistant error:", errors);
+        console.error("Ask to assistant error:", errors);
         console.error("Error details:", errors.message);
         console.error("Stack trace:", errors.stack);
         return res.status(200).json({

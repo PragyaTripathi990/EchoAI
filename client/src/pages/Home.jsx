@@ -5,7 +5,6 @@ import axios from 'axios'
 import { CgMenuRight } from "react-icons/cg";
 import { RxCross1 } from "react-icons/rx";
 import { FaMicrophone, FaMicrophoneSlash } from "react-icons/fa";
-import { HiSparkles } from "react-icons/hi";
 
 function Home() {
   const {userData,serverUrl,setUserData,getGeminiResponse}=useContext(userDataContext)
@@ -53,33 +52,33 @@ function Home() {
   }, [userData]);
 
   const startRecognition = () => {
-    console.log("🔵 startRecognition called");
+    console.log("startRecognition called");
     
     if (!recognitionRef.current) {
-      console.error("❌ Recognition not initialized");
+      console.error("Recognition not initialized");
       alert("Voice recognition not initialized. Please refresh the page.");
       return;
     }
     
     if (isRecognizingRef.current) {
-      console.log("⚠️ Already listening, ignoring request");
+      console.log("Already listening, ignoring request");
       return;
     }
     
     if (isSpeakingRef.current) {
-      console.log("⚠️ AI is speaking, please wait...");
+      console.log("AI is speaking, please wait...");
       return;
     }
     
     try {
-      console.log("🎤 Attempting to start recognition...");
+      console.log("Attempting to start recognition...");
       recognitionRef.current.start();
-      console.log("✅ Recognition start requested");
+      console.log("Recognition start requested");
     } catch (error) {
-      console.error("❌ Start error:", error.name, error.message);
+      console.error("Start error:", error.name, error.message);
       
       if (error.name === "InvalidStateError") {
-        console.log("⚠️ Recognition in invalid state, trying to reset...");
+        console.log("Recognition in invalid state, trying to reset...");
         try {
           recognitionRef.current.stop();
         } catch (e) {}
@@ -90,9 +89,9 @@ function Home() {
         setTimeout(() => {
           try {
             recognitionRef.current.start();
-            console.log("✅ Recognition restarted after reset");
+            console.log("Recognition restarted after reset");
           } catch (e2) {
-            console.error("❌ Still failed:", e2);
+            console.error("Still failed:", e2);
             alert("Voice recognition stuck. Please refresh the page (Cmd+Shift+R)");
           }
         }, 300);
@@ -103,14 +102,14 @@ function Home() {
   }
 
   const speak=(text)=>{
-    console.log("🗣️ AI will speak:", text);
+    console.log("AI will speak:", text);
     
     if (recognitionRef.current) {
       try {
         recognitionRef.current.stop();
-        console.log("🛑 Stopped recognition for AI speech");
+        console.log("Stopped recognition for AI speech");
       } catch(e) {
-        console.log("⚠️ Recognition already stopped");
+        console.log("Recognition already stopped");
       }
     }
     
@@ -127,12 +126,12 @@ function Home() {
     utterence.pitch = 1.0;
     
     utterence.onstart = () => {
-      console.log("🗣️ AI is now speaking");
+      console.log("AI is now speaking");
       isSpeakingRef.current = true;
     }
     
     utterence.onend = ()=>{
-      console.log("✅ AI finished speaking");
+      console.log("AI finished speaking");
       isSpeakingRef.current = false;
       setTimeout(() => {
         setAiText("");
@@ -140,7 +139,7 @@ function Home() {
     }
     
     utterence.onerror = (e) => {
-      console.error("❌ Speech error:", e);
+      console.error("Speech error:", e);
       isSpeakingRef.current = false;
     }
     
@@ -224,40 +223,40 @@ function Home() {
     recognitionRef.current = recognition;
 
     recognition.onstart = () => {
-      console.log("🎤 Microphone is now active!");
+      console.log("Microphone is now active!");
       isRecognizingRef.current = true;
       setListening(true);
     };
 
     recognition.onend = () => {
-      console.log("🛑 Microphone stopped");
+      console.log("Microphone stopped");
       isRecognizingRef.current = false;
       setListening(false);
     };
 
     recognition.onerror = (event) => {
-      console.error("❌ Recognition error:", event.error);
+      console.error("Recognition error:", event.error);
       
       isRecognizingRef.current = false;
       setListening(false);
       
       if (event.error === "not-allowed") {
-        alert("❌ Microphone permission denied! Please allow microphone access in your browser settings and refresh the page.");
+        alert("Microphone permission denied! Please allow microphone access in your browser settings and refresh the page.");
       } else if (event.error === "no-speech") {
-        console.log("⚠️ No speech detected. Click Start Listening again.");
+        console.log("No speech detected. Click Start Listening again.");
       } else if (event.error === "aborted") {
-        console.log("ℹ️ Recognition was aborted (this is OK if intentional)");
+        console.log("Recognition was aborted (this is OK if intentional)");
       } else {
-        console.log("⚠️ Error:", event.error);
+        console.log("Error:", event.error);
       }
     };
 
     recognition.onresult = async (e) => {
       const transcript = e.results[e.results.length - 1][0].transcript.trim();
-      console.log("🎤 Heard:", transcript);
+      console.log("Heard:", transcript);
       
       if (transcript.toLowerCase().includes(userData.assistantName.toLowerCase())) {
-        console.log("✅ Assistant name detected! Processing command...");
+        console.log("Assistant name detected! Processing command...");
         
         try {
           recognition.stop();
@@ -269,16 +268,16 @@ function Home() {
         
         try {
           const data = await getGeminiResponse(transcript);
-          console.log("🤖 AI Response:", data);
+          console.log("AI Response:", data);
           handleCommand(data);
           setUserText("");
         } catch (error) {
-          console.error("❌ Error getting response:", error);
+          console.error("Error getting response:", error);
           setAiText("Sorry, I couldn't process that.");
           speak("Sorry, I couldn't process that.");
         }
       } else {
-        console.log("⚠️ Assistant name not detected in:", transcript);
+        console.log("Assistant name not detected in:", transcript);
       }
     };
 
@@ -296,89 +295,127 @@ function Home() {
       recognitionRef.current.stop();
       isRecognizingRef.current = false;
       setListening(false);
-      console.log("🛑 Voice recognition stopped");
+      console.log("Voice recognition stopped");
     }
   }
 
   return (
-    <div className='w-full min-h-screen animated-gradient flex flex-col relative overflow-hidden'>
-      {/* Animated Background Elements */}
-      <div className="absolute top-20 left-20 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-float"></div>
-      <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-float" style={{animationDelay: '2s'}}></div>
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-float" style={{animationDelay: '1s'}}></div>
+    <div className='w-full h-screen mesh-gradient flex flex-col relative overflow-hidden'>
+      {/* Animated Particles */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {[...Array(20)].map((_, i) => (
+          <div
+            key={i}
+            className="particle"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 8}s`,
+              animationDuration: `${8 + Math.random() * 4}s`
+            }}
+          />
+        ))}
+      </div>
 
-      {/* Top Navigation */}
-      <div className='absolute top-6 left-6 right-6 z-50 flex justify-between items-center'>
-        {/* Logo/Brand */}
-        <div className='glass rounded-2xl px-4 py-2 flex items-center gap-2'>
-          <HiSparkles className='text-yellow-400 w-6 h-6' />
-          <span className='text-white font-bold text-lg hidden sm:block'>QuickAI</span>
-        </div>
+      {/* Floating Gradient Orbs */}
+      <div className="absolute top-[-10%] left-[-5%] w-[500px] h-[500px] bg-gradient-to-br from-blue-500/20 to-purple-600/20 rounded-full blur-3xl animate-float"></div>
+      <div className="absolute bottom-[-10%] right-[-5%] w-[500px] h-[500px] bg-gradient-to-br from-purple-500/20 to-pink-600/20 rounded-full blur-3xl animate-float" style={{animationDelay: '2s'}}></div>
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-cyan-500/10 to-blue-600/10 rounded-full blur-3xl animate-float" style={{animationDelay: '1s'}}></div>
 
-        {/* Desktop Buttons */}
-        <div className='hidden lg:flex gap-3'>
+      {/* Top Navigation - Fixed */}
+      <div className='absolute top-0 left-0 right-0 z-50 p-6'>
+        <div className='max-w-7xl mx-auto flex justify-between items-center'>
+          {/* Logo/Brand */}
+          <div className='glass-premium rounded-2xl px-5 py-3 flex items-center gap-3 animate-slide-up shadow-2xl'>
+            <div className='w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-lg animate-pulse-glow'>
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <span className='text-white font-bold text-xl tracking-tight hidden sm:block'>QuickAI</span>
+          </div>
+
+          {/* Desktop Buttons */}
+          <div className='hidden lg:flex gap-4 animate-slide-up' style={{animationDelay: '0.1s'}}>
+            <button 
+              onClick={()=>navigate("/customize")}
+              className='glass-premium rounded-2xl px-6 py-3 text-white font-medium hover-lift transition-all flex items-center gap-2.5 shadow-xl group'
+            >
+              <svg className="w-5 h-5 group-hover:rotate-90 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <span>Customize</span>
+            </button>
+            <button 
+              onClick={handleLogOut}
+              className='glass-premium rounded-2xl px-6 py-3 text-white font-medium hover-lift transition-all flex items-center gap-2.5 shadow-xl group'
+            >
+              <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              <span>Logout</span>
+            </button>
+          </div>
+
+          {/* Mobile Menu Button */}
           <button 
-            onClick={()=>navigate("/customize")}
-            className='glass rounded-2xl px-6 py-3 text-white font-semibold hover-lift transition-all'
+            className='lg:hidden glass-premium rounded-2xl p-3 animate-slide-up shadow-xl'
+            onClick={()=>setHam(true)}
+            style={{animationDelay: '0.1s'}}
           >
-            ⚙️ Customize
-          </button>
-          <button 
-            onClick={handleLogOut}
-            className='glass rounded-2xl px-6 py-3 text-white font-semibold hover-lift transition-all'
-          >
-            🚪 Logout
+            <CgMenuRight className='text-white w-6 h-6'/>
           </button>
         </div>
-
-        {/* Mobile Menu Button */}
-        <button 
-          className='lg:hidden glass rounded-2xl p-3'
-          onClick={()=>setHam(true)}
-        >
-          <CgMenuRight className='text-white w-6 h-6'/>
-        </button>
       </div>
 
       {/* Mobile Menu */}
-      <div className={`fixed lg:hidden top-0 right-0 w-full h-full glass-dark backdrop-blur-2xl p-8 flex flex-col gap-6 z-50 transition-transform ${ham?"translate-x-0":"translate-x-full"}`}>
+      <div className={`fixed lg:hidden top-0 right-0 w-full h-full glass-dark backdrop-blur-3xl p-8 flex flex-col gap-6 z-50 transition-all duration-500 ${ham?"translate-x-0 opacity-100":"translate-x-full opacity-0"}`}>
         <button 
-          className='self-end glass rounded-full p-3'
+          className='self-end glass-premium rounded-full p-3 hover:rotate-90 transition-transform duration-300'
           onClick={()=>setHam(false)}
         >
           <RxCross1 className='text-white w-6 h-6'/>
         </button>
         
-        <div className='flex flex-col gap-4'>
+        <div className='flex flex-col gap-5 mt-10'>
           <button 
-            className='glass rounded-2xl px-6 py-4 text-white font-semibold text-lg hover-lift' 
+            className='glass-premium rounded-2xl px-8 py-5 text-white font-semibold text-lg hover-lift flex items-center gap-4 shadow-xl group' 
             onClick={()=>{setHam(false); navigate("/customize")}}
           >
-            ⚙️ Customize Assistant
+            <svg className="w-7 h-7 group-hover:rotate-90 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span>Customize Assistant</span>
           </button>
           <button 
-            className='glass rounded-2xl px-6 py-4 text-white font-semibold text-lg hover-lift' 
+            className='glass-premium rounded-2xl px-8 py-5 text-white font-semibold text-lg hover-lift flex items-center gap-4 shadow-xl group' 
             onClick={handleLogOut}
           >
-            🚪 Logout
+            <svg className="w-7 h-7 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            <span>Logout</span>
           </button>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className='flex-1 flex flex-col items-center justify-center p-6 relative z-10 gap-8'>
-        {/* Assistant Avatar */}
-        <div className='animate-scale-in'>
-          <div className='relative'>
-            <div className={`w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden glass shadow-2xl ${aiText ? 'animate-pulse-glow' : ''}`}>
+      {/* Main Content - Centered */}
+      <div className='flex-1 flex flex-col items-center justify-center px-6 pb-6 pt-24 relative z-10 max-w-4xl mx-auto w-full'>
+        {/* Assistant Avatar with Advanced Animation */}
+        <div className='mb-8 animate-scale-in'>
+          <div className='relative group'>
+            <div className={`w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden glass-premium shadow-2xl transition-all duration-500 ${aiText ? 'animate-pulse-glow scale-110' : 'scale-100'} ${listening ? 'ring-4 ring-green-400 ring-opacity-50' : ''}`}>
               <img 
                 src={userData?.assistantImage} 
                 alt="Assistant" 
-                className='w-full h-full object-cover'
+                className='w-full h-full object-cover group-hover:scale-110 transition-transform duration-500'
               />
             </div>
+            {/* Status Ring */}
             {listening && (
-              <div className='absolute -bottom-2 left-1/2 transform -translate-x-1/2 glass rounded-full px-6 py-2'>
+              <div className='absolute -bottom-3 left-1/2 transform -translate-x-1/2 glass-premium rounded-full px-6 py-2 shadow-xl animate-slide-up'>
                 <div className='voice-wave flex items-center justify-center gap-1'>
                   <span></span>
                   <span></span>
@@ -391,67 +428,89 @@ function Home() {
           </div>
         </div>
 
-        {/* Assistant Name */}
-        <div className='text-center animate-slide-up'>
-          <h1 className='text-white text-3xl md:text-4xl font-bold mb-2'>
+        {/* Assistant Name with Gradient */}
+        <div className='text-center mb-8 animate-slide-up' style={{animationDelay: '0.2s'}}>
+          <h1 className='text-white text-5xl md:text-6xl font-bold mb-3 tracking-tight'>
             {userData?.assistantName}
           </h1>
-          <p className='text-gray-300 text-sm md:text-base'>Your AI Voice Assistant</p>
+          <p className='text-slate-300 text-lg md:text-xl font-medium bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent'>
+            Your AI Voice Assistant
+          </p>
         </div>
 
-        {/* Status Display */}
-        <div className='glass rounded-2xl p-6 min-w-[300px] max-w-lg text-center animate-slide-up'>
+        {/* Status Display with Premium Card */}
+        <div className='glass-premium rounded-3xl p-8 min-w-[320px] max-w-xl w-full text-center animate-slide-up shadow-2xl mb-8' style={{animationDelay: '0.3s'}}>
           {userText && (
-            <div className='mb-4'>
-              <p className='text-blue-400 text-sm font-medium mb-1'>You said:</p>
-              <p className='text-white text-lg font-semibold'>{userText}</p>
+            <div className='mb-6 animate-slide-up'>
+              <div className='flex items-center justify-center gap-2 mb-3'>
+                <div className='w-2 h-2 bg-blue-400 rounded-full'></div>
+                <p className='text-blue-400 text-sm font-semibold uppercase tracking-wider'>You said</p>
+              </div>
+              <p className='text-white text-xl md:text-2xl font-bold'>{userText}</p>
             </div>
           )}
           {aiText && (
-            <div>
-              <p className='text-purple-400 text-sm font-medium mb-1'>{userData?.assistantName} says:</p>
-              <p className='text-white text-lg font-semibold'>{aiText}</p>
+            <div className='animate-slide-up'>
+              <div className='flex items-center justify-center gap-2 mb-3'>
+                <div className='w-2 h-2 bg-purple-400 rounded-full animate-pulse'></div>
+                <p className='text-purple-400 text-sm font-semibold uppercase tracking-wider'>{userData?.assistantName} says</p>
+              </div>
+              <p className='text-white text-xl md:text-2xl font-bold'>{aiText}</p>
             </div>
           )}
           {!userText && !aiText && listening && (
-            <div>
-              <p className='text-green-400 text-lg font-semibold mb-2'>🎤 Listening...</p>
-              <p className='text-gray-400 text-sm'>Say "<span className='text-white font-semibold'>{userData?.assistantName}</span>" to activate</p>
+            <div className='flex flex-col items-center gap-4 animate-pulse'>
+              <div className='flex items-center gap-3'>
+                <div className='w-3 h-3 bg-green-400 rounded-full animate-ping'></div>
+                <p className='text-green-400 text-2xl font-bold'>Listening...</p>
+              </div>
+              <p className='text-slate-300 text-base'>Say "<span className='text-white font-bold text-lg'>{userData?.assistantName}</span>" to activate</p>
             </div>
           )}
           {!userText && !aiText && !listening && (
-            <div>
-              <p className='text-gray-400 text-base'>Click the microphone button below to start</p>
+            <div className='py-2'>
+              <p className='text-slate-300 text-lg'>Click the microphone to start</p>
             </div>
           )}
         </div>
 
-        {/* Microphone Button */}
-        <div className='animate-slide-up'>
+        {/* Microphone Button - Larger and More Prominent */}
+        <div className='animate-slide-up mb-8' style={{animationDelay: '0.4s'}}>
           {!listening ? (
             <button 
               onClick={startRecognition}
-              className='w-20 h-20 md:w-24 md:h-24 rounded-full bg-gradient-to-br from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 flex items-center justify-center shadow-2xl hover-lift transition-all group'
+              className='w-28 h-28 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-green-400 via-emerald-500 to-teal-600 hover:from-green-500 hover:to-teal-700 flex items-center justify-center shadow-2xl hover-lift transition-all group relative overflow-hidden'
             >
-              <FaMicrophone className='text-white w-10 h-10 md:w-12 md:h-12 group-hover:scale-110 transition-transform' />
+              <div className='absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity'></div>
+              <FaMicrophone className='text-white w-14 h-14 md:w-16 md:h-16 group-hover:scale-110 transition-transform relative z-10' />
             </button>
           ) : (
             <button 
               onClick={stopRecognition}
-              className='w-20 h-20 md:w-24 md:h-24 rounded-full bg-gradient-to-br from-red-400 to-red-600 hover:from-red-500 hover:to-red-700 flex items-center justify-center shadow-2xl animate-pulse-glow transition-all group'
+              className='w-28 h-28 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-red-400 via-rose-500 to-pink-600 hover:from-red-500 hover:to-pink-700 flex items-center justify-center shadow-2xl animate-pulse-glow transition-all group relative overflow-hidden'
             >
-              <FaMicrophoneSlash className='text-white w-10 h-10 md:w-12 md:h-12 group-hover:scale-110 transition-transform' />
+              <div className='absolute inset-0 bg-gradient-to-br from-white/20 to-transparent'></div>
+              <FaMicrophoneSlash className='text-white w-14 h-14 md:w-16 md:h-16 group-hover:scale-110 transition-transform relative z-10' />
             </button>
           )}
         </div>
 
-        {/* Quick Tips */}
-        <div className='glass rounded-2xl p-4 max-w-2xl animate-slide-up'>
-          <p className='text-gray-300 text-xs md:text-sm text-center'>
-            <span className='text-yellow-400 font-semibold'>💡 Try saying:</span> 
-            <span className='text-white'> "{userData?.assistantName}, what time is it?"</span> or 
-            <span className='text-white'> "{userData?.assistantName}, tell me a joke"</span>
-          </p>
+        {/* Quick Tips - Premium Card */}
+        <div className='glass-premium rounded-2xl p-5 max-w-2xl w-full animate-slide-up shadow-xl' style={{animationDelay: '0.5s'}}>
+          <div className='flex items-start gap-4'>
+            <div className='w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0 shadow-lg'>
+              <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div>
+              <p className='text-blue-400 font-bold text-sm uppercase tracking-wider mb-2'>Pro Tips</p>
+              <p className='text-slate-200 text-sm md:text-base leading-relaxed'>
+                Try: "<span className='text-white font-semibold'>{userData?.assistantName}, what time is it?</span>" 
+                or "<span className='text-white font-semibold'>{userData?.assistantName}, tell me a joke</span>"
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
