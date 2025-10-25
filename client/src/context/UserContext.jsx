@@ -2,7 +2,8 @@ import axios from 'axios'
 import React, { createContext, useEffect, useState } from 'react'
 export const userDataContext=createContext()
 function UserContext({children}) {
-    const serverUrl="http://localhost:8000"
+    // Use environment variable for production, localhost for development
+    const serverUrl = import.meta.env.VITE_API_URL || "http://localhost:8000"
     const [userData,setUserData]=useState(null)
     const [frontendImage,setFrontendImage]=useState(null)
      const [backendImage,setBackendImage]=useState(null)
