@@ -28,8 +28,8 @@ export const register = async (req, res) => {
         res.cookie("token", token, {
             httpOnly: true,
             maxAge: 10 * 24 * 60 * 60 * 1000, // 10 days
-            sameSite: "strict",
-            secure: false
+            sameSite: "none",
+            secure: true
         });
         // This tells the frontend signup succeeded. 201 = "Created".
         return res.status(201).json(user);
@@ -54,8 +54,8 @@ export const login = async (req, res) => {
         res.cookie("token", token, {
             httpOnly: true,
             maxAge: 10 * 24 * 60 * 60 * 1000,
-            sameSite: "strict",
-            secure: false
+            sameSite: "none",
+            secure: true
         });
         // Exclude password from user object
         const { password: _pw, ...userWithoutPassword } = user.toObject();
